@@ -2176,10 +2176,14 @@ static int gssapi_client_mech_step(void *conn_context,
                     desired_mechs = &mechs;
                 }
 
+                client_creds = text->client_creds;
                 maj_stat = gss_acquire_cred(&min_stat, GSS_C_NO_NAME,
                                             GSS_C_INDEFINITE, desired_mechs,
                                             GSS_C_INITIATE,
                                             &text->client_creds, NULL, NULL);
+                if (client_creds != text->client_creds) {
+                    gss_release_cred(&min_stat, &client_creds);
+                }
                 if (GSS_ERROR(maj_stat)) {
                     sasl_gss_seterror(text->utils, maj_stat, min_stat);
                     sasl_gss_free_context_contents(text);

@@ -177,6 +177,7 @@ static void sasl_mutex_free(void *mutex __attribute__((unused)))
 {
 #if defined(HAVE_PTHREAD)
     pthread_mutex_destroy(mutex);
+    sasl_FREE(mutex);
 #elif defined(HAVE_NT_THREADS)
     CloseHandle(mutex);
 #endif
